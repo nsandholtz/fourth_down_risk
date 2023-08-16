@@ -69,7 +69,7 @@ p = qval_long |>
     legend.title = element_text(size=10), 
     legend.text = element_text(size=8))
 
-pdf(file = "./figures/fig_5a_top.pdf", width = 8)
+pdf(file = "./figures/fig_4a_top.pdf", width = 8)
 p
 dev.off()
 
@@ -112,7 +112,7 @@ p_argmax = qopt_long |>
     legend.title = element_text(size=10), #change legend title font size
     legend.text = element_text(size=8)) #change legend text font size
 
-pdf(file = "./figures/fig_5a_bottom.pdf", width = 8)
+pdf(file = "./figures/fig_4a_bottom.pdf", width = 8)
 p_argmax
 dev.off()
 
@@ -169,7 +169,7 @@ p_smooth = qval_long_smooth |>
     legend.title = element_text(size=10), #change legend title font size
     legend.text = element_text(size=8))
 
-pdf(file = "./figures/fig_5b_top.pdf", width = 8)
+pdf(file = "./figures/fig_4b_top.pdf", width = 8)
 p_smooth
 dev.off()
 
@@ -213,6 +213,6 @@ p_argmax_smooth = qopt_long_smooth |>
     legend.title = element_text(size=10), #change legend title font size
     legend.text = element_text(size=8)) #change legend text font size
 
-pdf(file = "./figures/fig_5b_bottom.pdf", width = 8)
+pdf(file = "./figures/fig_4b_bottom.pdf", width = 8)
 p_argmax_smooth
 dev.off()

@@ -287,19 +287,17 @@ get_half_TCM <- function(clean_data,
   clean_pbp_data = clean_data
   
   # define absorption states:
-  (absorption_states <- unique(clean_pbp_data$absorption_state))
+  absorption_states <- unique(clean_pbp_data$absorption_state)
   
   # states to scoring states count
   a = clean_pbp_data |>
     group_by(play_state, next_play_state_3) |>
     count() |> 
     filter(!is.na(next_play_state_3)) |> 
-    # remove kickoff4 -> opp_touchdown
     filter(!(str_detect(play_state, "kickoff") & (next_play_state_3 %in% scoring_states)))
   
   # scoring to scoring states count
   a1 = clean_pbp_data |>
-    # mutate(absorption_state_next = lead(absorption_state)) |> 
     filter(absorption_state !=  "end_of_time") |>
     group_by(absorption_state, next_absorption_state) |>
     count() |> 
@@ -314,9 +312,7 @@ get_half_TCM <- function(clean_data,
   
   possible_grids = 
     expand.grid(down = unique_down_state,
-                #down = na.omit(unique(removed_pbp_data$down)),
                 ydstogo_group = unique_ydstogo_state,
-                # yardline_100_group = seq(1,99)
                 yardline_100_group = unique_yardline_100_state
     ) |> 
     arrange(down, 
@@ -366,7 +362,6 @@ get_half_TCM <- function(clean_data,
     left_join(a2, by = c("play_state" = "play_state", 
                          "off"="next_play_state_3")) |>
     unique() |>
-    # mutate(index = row_number()) |> 
     pivot_wider(id_cols = play_state, names_from = off,values_from = n) 
   mat1[is.na(mat1)] = 0
   
@@ -374,9 +369,7 @@ get_half_TCM <- function(clean_data,
     left_join(a2, by = c("play_state" = "play_state", 
                          "opp"="next_play_state_3")) |>
     unique() |> 
-    # mutate(index = row_number()) |> 
     pivot_wider(id_cols = play_state, names_from = opp, values_from = n) #|> 
-  # dplyr::select(-index)
   mat2[is.na(mat2)] = 0
   
   
@@ -514,7 +507,7 @@ get_value_df_full <- function(value_states,
 get_value_function <- function(data){
   half_TCM <- data |>
     get_half_TCM()
-  half_TPM <- t(apply(half_TCM, 1, function(x){x/sum(x)})) # Get TPM
+  half_TPM <- t(apply(half_TCM, 1, function(x){x/sum(x)})) # Normalize
   half_TPM[is.nan(half_TPM)] <- 0 # Make rows with no obs zeros
   TPM <- half_TPM |> mirror_TPM()
   value_states = solve_value_function(TPM) 
