@@ -1195,23 +1195,23 @@ get_tau_hat <- function(pbp_dat,
 }
 
 
-get_loss_curve <- function(policy_dat, 
-                           value_func_dat,
+get_loss_curve <- function(pbp_dat, 
                            augment = T, 
+                           fourth_states_,
                            tau_vec = round(seq(.2,.8,by = .01), digits = 2)){
-  if(identical(policy_dat, value_func_dat)){
-    boot_arg = NULL
-  } else {
-    boot_arg = 1
-  }
-  obs_policy <- get_observed_policy(dat = policy_dat,
-                                    fourth_state_df = fourth_states,
-                                    boot = boot_arg)
-  value_func <- get_value_function(value_func_dat)
-  augmented_action_TPM <- get_action_TPMs(value_func_dat, augment_third = augment)
+  # if(identical(policy_dat, value_func_dat)){
+  #   boot_arg = NULL
+  # } else {
+  #   boot_arg = 1
+  # }
+  obs_policy <- get_observed_policy(dat = pbp_dat,
+                                    fourth_state_df = fourth_states_)
+  value_func <- get_value_function(pbp_dat)
+  augmented_action_TPM <- get_action_TPMs(pbp_dat,
+                                          augment_third = augment)
   q_policy_smooth <- list()
   for(i in 1:length(tau_vec)) {
-    #cat(tau_vec[i],"\r")
+    #cat(tau_vec[i],"\r") Uncomment to watch progress
     q_policy_smooth[[i]] <- get_tau_policy_smooth(value_func = value_func,
                                                   a_TPM = augmented_action_TPM,
                                                   tau = tau_vec[i],
@@ -1228,8 +1228,8 @@ get_loss_curve <- function(policy_dat,
   loss_matrix[,1] <- tau_vec
   
   # Own half vs. Opp half
-  FG_inds <- which(as.numeric(obs_policy$yardline_100_group) <= 5)
-  PUNT_inds <- which(as.numeric(obs_policy$yardline_100_group) > 5)
+  OPP_inds <- which(as.numeric(obs_policy$yardline_100_group) <= 5)
+  OWN_inds <- which(as.numeric(obs_policy$yardline_100_group) > 5)
   
   for(i in 1:length(tau_vec)){
     helper_matrix <- q_policy_smooth_df |>
@@ -1238,10 +1238,10 @@ get_loss_curve <- function(policy_dat,
       (\(.) cbind(1:100, .))() # 1:100 indexes the fourth down states
     
     suboptimal_decisions <- action_df$obs_total_n - as.matrix(action_df)[helper_matrix]
-    loss_matrix[i,2] <- sum(suboptimal_decisions[FG_inds], na.rm = T)/sum(action_df$obs_total_n, na.rm = T) 
-    loss_matrix[i,3] <- sum(suboptimal_decisions[PUNT_inds], na.rm = T)/sum(action_df$obs_total_n, na.rm = T) 
+    loss_matrix[i,2] <- sum(suboptimal_decisions[OPP_inds], na.rm = T)/sum(action_df$obs_total_n, na.rm = T) 
+    loss_matrix[i,3] <- sum(suboptimal_decisions[OWN_inds], na.rm = T)/sum(action_df$obs_total_n, na.rm = T) 
   }
-  colnames(loss_matrix) <- c("tau", "FG", "PUNT")
+  colnames(loss_matrix) <- c("tau", "OPP", "OWN")
   loss_matrix[loss_matrix == 0] <- NA
   loss_matrix
 }
