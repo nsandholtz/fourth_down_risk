@@ -1156,8 +1156,8 @@ get_tau_hat <- function(pbp_dat,
   loss_matrix[,1] <- tau_vec
   
   # Own half vs. Opp half
-  FG_inds <- which(as.numeric(obs_policy$yardline_100_group) <= 5)
-  PUNT_inds <- which(as.numeric(obs_policy$yardline_100_group) > 5)
+  OPP_inds <- which(as.numeric(obs_policy$yardline_100_group) <= 5)
+  OWN_inds <- which(as.numeric(obs_policy$yardline_100_group) > 5)
   
   for(i in 1:length(tau_vec)){
     helper_matrix <- quant_policy |>
@@ -1167,25 +1167,25 @@ get_tau_hat <- function(pbp_dat,
     
     if(sum(is.na(helper_matrix[,2])) == 100) next
     suboptimal_decisions <- action_df$obs_total_n - as.matrix(action_df)[helper_matrix]
-    loss_matrix[i,2] <- sum(suboptimal_decisions[FG_inds], na.rm = T)/sum(action_df$obs_total_n[FG_inds], na.rm = T) 
-    loss_matrix[i,3] <- sum(suboptimal_decisions[PUNT_inds], na.rm = T)/sum(action_df$obs_total_n[PUNT_inds], na.rm = T) 
+    loss_matrix[i,2] <- sum(suboptimal_decisions[OPP_inds], na.rm = T)/sum(action_df$obs_total_n[OPP_inds], na.rm = T) 
+    loss_matrix[i,3] <- sum(suboptimal_decisions[OWN_inds], na.rm = T)/sum(action_df$obs_total_n[OWN_inds], na.rm = T) 
   }
-  colnames(loss_matrix) <- c("tau", "FG", "PUNT")
+  colnames(loss_matrix) <- c("tau", "OPP", "OWN")
   loss_matrix[loss_matrix == 0] <- NA
   min_loss <- list()
   min_loss[[1]] <- as.data.frame(loss_matrix) |>
-    select(-PUNT) |>
-    filter(FG == min(FG, na.rm = T)) |>
-    rename(min_loss = FG) |>
+    select(-OWN) |>
+    filter(OPP == min(OPP, na.rm = T)) |>
+    rename(min_loss = OPP) |>
     mutate(weight = 1/n(),
-           field_region = "FG Range")
+           field_region = "OPP")
   
   min_loss[[2]] <- as.data.frame(loss_matrix) |>
-    select(-FG) |>
-    filter(PUNT == min(PUNT, na.rm = T)) |>
-    rename(min_loss = PUNT) |>
+    select(-OPP) |>
+    filter(OWN == min(OWN, na.rm = T)) |>
+    rename(min_loss = OWN) |>
     mutate(weight = 1/n(),
-           field_region = "PUNT Range")
+           field_region = "OWN")
   min_loss <- bind_rows(min_loss)
   
   if(!is.null(boot_index)){
@@ -1199,11 +1199,6 @@ get_loss_curve <- function(pbp_dat,
                            augment = T, 
                            fourth_states_,
                            tau_vec = round(seq(.2,.8,by = .01), digits = 2)){
-  # if(identical(policy_dat, value_func_dat)){
-  #   boot_arg = NULL
-  # } else {
-  #   boot_arg = 1
-  # }
   obs_policy <- get_observed_policy(dat = pbp_dat,
                                     fourth_state_df = fourth_states_)
   value_func <- get_value_function(pbp_dat)
