@@ -68,19 +68,20 @@ dev.off()
 # Loss curve plots ----------------------------------------------------------------
 
 league_agg_loss <- get_loss_curve(clean_pbp, 
-                                  tau_vec = round(seq(.01,.99,by = .01), digits = 2)) |> 
+                                  tau_vec = round(seq(.01,.99,by = .01), digits = 2),
+                                  fourth_states_ = fourth_states) |> 
   as.data.frame()
 
 loss_long <- league_agg_loss |>
-  rename("Own half" = PUNT, 
-         "Opp half" = FG) |>
+  rename("Own half" = OWN, 
+         "Opp half" = OPP) |>
   pivot_longer(cols = c("Own half", "Opp half"),
                names_to = "Field Region",
                values_to = "Loss")
 
 
-min_OWN <- league_agg_loss[league_agg_loss$PUNT == min(league_agg_loss$PUNT), c("tau", "PUNT")]
-min_OPP <- league_agg_loss[league_agg_loss$FG == min(league_agg_loss$FG), c("tau", "FG")]
+min_OWN <- league_agg_loss[league_agg_loss$OWN == min(league_agg_loss$OWN), c("tau", "OWN")]
+min_OPP <- league_agg_loss[league_agg_loss$OPP == min(league_agg_loss$OPP), c("tau", "OPP")]
 
 
 p1 <- loss_long |>
@@ -91,15 +92,15 @@ p1 <- loss_long |>
                      labels = c(expression(P[1]), expression(P[2]))) + 
   geom_segment(data = min_OWN[1,],
                aes(x = 0, 
-                   y = PUNT, 
+                   y = OWN, 
                    xend = 1,
-                   yend = PUNT),
+                   yend = OWN),
                color = rgb(0,0,.5,.5), linewidth = 1, lty="11") +
   geom_segment(data = min_OPP[1,],
                aes(x = 0, 
-                   y = FG, 
+                   y = OPP, 
                    xend = 1,
-                   yend = FG),
+                   yend = OPP),
                color = rgb(1,.65,0,.75), linewidth = 1, lty="11") +
   annotate(geom = "text", x = .2, y = .02,
            label = list('paste(hat(tau)[2] %in% "[0.02, 0.36] ", union("[0.39, 0.40]"))'),

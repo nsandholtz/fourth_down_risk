@@ -37,7 +37,8 @@ plot_df <- boot_full_policies_long |>
 plot_df$pct[plot_df$max_value == 0] <- NA
 plot_df$fourth_down_decision[plot_df$max_value == 0] <- NA
 
-boot_arg_max_plot_appendix <- plot_df |> mutate(pct_cat = cut(pct, breaks = seq(0.3, 1, 0.1), include.lowest = T, right = F)) |>
+boot_arg_max_plot_appendix <- plot_df |> 
+  mutate(pct_cat = cut(pct, breaks = seq(0.3, 1, 0.1), include.lowest = T, right = F)) |>
   plot_decision_map(., fill_variable = "discrete", 
                     legend_name = "",
                     fill = fourth_down_decision, alpha = pct_cat, na.value = "grey") +
