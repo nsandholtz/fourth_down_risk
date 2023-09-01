@@ -52,7 +52,7 @@ OPP_loss_a <- boot_loss_full |>
              filter(OPP == min(OPP)), sides = "b", position = "jitter", color = rgb(1,.45,0,.1)) +
   ylab("Loss") +
   theme_minimal() + 
-  xlab(expression(tau)) +
+  xlab(expression(tau[1])) +
   ggtitle(expression(paste(P[1]," (Opponent Half)"))) +
   scale_x_continuous(breaks = seq(0, 1, by = .1)) + 
   theme(plot.title = element_text(hjust = 0.5))
@@ -75,7 +75,7 @@ OPP_loss_b <- boot_loss_full |>
   scale_x_continuous(breaks = seq(0, 1, by = .1),
                      limits = c(0,1)) + 
   ylab("Density") +
-  xlab(expression(tau)) +
+  xlab(expression(tau[1])) +
   theme_minimal() 
 
 png(file = "./figures/fig_5_left.png", units="in", width=5, height=5.5, res=300)
@@ -99,7 +99,7 @@ OWN_loss_a <- boot_loss_full |>
              filter(OWN == min(OWN)), sides = "b", position = "jitter", color = rgb(0,0,.5,.1)) +
   ylab("Loss") +
   theme_minimal() + 
-  xlab(expression(tau)) +
+  xlab(expression(tau[2])) +
   ggtitle(expression(paste(P[2]," (Own Half)"))) +
   scale_x_continuous(breaks = seq(0, 1, by = .1)) + 
   theme(plot.title = element_text(hjust = 0.5))
@@ -122,7 +122,7 @@ OWN_loss_b <- boot_loss_full |>
   scale_x_continuous(breaks = seq(0, 1, by = .1),
                      limits = c(0,1)) + 
   ylab("Density") +
-  xlab(expression(tau)) +
+  xlab(expression(tau[2])) +
   theme_minimal() 
 
 png(file = "./figures/fig_5_right.png", units="in", width=5, height=5.5, res=300)
