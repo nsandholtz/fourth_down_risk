@@ -69,7 +69,7 @@ a1 = ggplot(data = my_dat_a1,
              linewidth = 0.8, linetype = c(2)) + 
   annotate("text", 
            x = c(mean(my_dat_a1$ns_ep2)) + .1,
-           y = .25, label = bquote("Empirical Mean = " ~ .(round(mean(my_dat_a1$ns_ep2),2))), hjust = 0, size = 3) + 
+           y = .35, label = bquote("Empirical Mean = " ~ .(round(mean(my_dat_a1$ns_ep2),2))), hjust = 0, size = 3) + 
   theme(strip.text = element_text(size=10)) +
   theme(strip.background = element_rect(colour = NA, fill = gray(.85))) 
 
@@ -124,15 +124,15 @@ a3 = ggplot(data = my_dat_a3,
              color = "black",
              linewidth = 0.8, linetype = c(2)) + 
   annotate("text", 
-           x = c(mean(my_dat_a3$ns_ep2)) + .12,
-           y = .75, label = bquote("Empirical Mean = " ~ .(round(mean(my_dat_a3$ns_ep2),2))), hjust = 0, size = 3) + 
+           x = c(mean(my_dat_a3$ns_ep2)) + .74,
+           y = .52, label = bquote("Empirical Mean = " ~ .(round(mean(my_dat_a3$ns_ep2),2))), hjust = 0, size = 3) + 
   theme(strip.text = element_text(size=10)) +
   theme(strip.background = element_rect(colour = NA, fill = gray(.85))) 
 
 
 lhs = cowplot::plot_grid(a1,a2,a3, nrow = 3)
 pdf("./figures/fig_2a.pdf",
-    width = 8, height = 8)
+    width = 5.5, height = 5.5)
 lhs
 dev.off()
 
@@ -202,7 +202,7 @@ quant_plot = ggplot(data=a1_quant_f, aes(x=quant, y=value)) +
            label = "GO optimal",  size = 3) 
 
 pdf("./figures/fig_2b.pdf",
-    width = 8, height = 8)
+    width = 5.5, height = 5.5)
 quant_plot
 dev.off()
 

@@ -114,6 +114,6 @@ g.legend_2 = ggpubr::ggarrange(NULL, g.legend, NULL,
 ggpubr::ggarrange(observed_decision_map, estimate_wp_policy,
                   g.legend_2, 
                   widths = c(0.7,0.7,0.3), nrow = 1)
-ggsave("./figures/fig_1.pdf", width = 18, height = 7)
+ggsave("./figures/fig_1.pdf", width = 15, height = 5.83)
 
 
