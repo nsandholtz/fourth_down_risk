@@ -36,7 +36,7 @@ qval_long <- bind_rows(q_policy) |>
                names_prefix = "V_",
                values_to = "value") |>
   mutate(action = str_to_upper(action)) |>
-  select(1:4, action, value, tau)
+  dplyr::select(1:4, action, value, tau)
 
 p = qval_long |> 
   ggplot(aes(x=yardline_100_group, y=ydstogo_group, fill = value)) +
@@ -66,10 +66,10 @@ p = qval_long |>
   coord_fixed() + 
   guides(fill = guide_colorbar(barheight = .5)) +
   theme(
-    legend.title = element_text(size=10), 
-    legend.text = element_text(size=8))
+    legend.title = element_text(size=11), 
+    legend.text = element_text(size=9))
 
-pdf(file = "./figures/fig_4a_top.pdf", width = 8)
+pdf(file = "./figures/fig_4a_top.pdf", width = 5.5)
 p
 dev.off()
 
@@ -92,7 +92,7 @@ p_argmax = qopt_long |>
   theme_classic() +
   theme(
     axis.text.x = element_text(
-      angle = 45,
+      angle = 75,
       vjust = 1,
       hjust = 1,
       size = 7
@@ -109,10 +109,10 @@ p_argmax = qopt_long |>
   coord_fixed() + 
   guides(fill = guide_legend(keyheight = .5, keywidth = .5)) +
   theme(
-    legend.title = element_text(size=10), #change legend title font size
-    legend.text = element_text(size=8)) #change legend text font size
+    legend.title = element_text(size=11), #change legend title font size
+    legend.text = element_text(size=9)) #change legend text font size
 
-pdf(file = "./figures/fig_4a_bottom.pdf", width = 8)
+pdf(file = "./figures/fig_4a_bottom.pdf", width = 5.5)
 p_argmax
 dev.off()
 
@@ -136,7 +136,7 @@ qval_long_smooth <- bind_rows(q_policy_smooth) |>
                names_prefix = "V_",
                values_to = "value") |>
   mutate(action = str_to_upper(action)) |>
-  select(1:4, action, value, tau)
+  dplyr::select(1:4, action, value, tau)
 
 p_smooth = qval_long_smooth |> 
   ggplot(aes(x=yardline_100_group, y=ydstogo_group, fill = value)) +
@@ -166,10 +166,10 @@ p_smooth = qval_long_smooth |>
   coord_fixed() + 
   guides(fill = guide_colorbar(barheight = .5)) +
   theme(
-    legend.title = element_text(size=10), #change legend title font size
-    legend.text = element_text(size=8))
+    legend.title = element_text(size=11), #change legend title font size
+    legend.text = element_text(size=9))
 
-pdf(file = "./figures/fig_4b_top.pdf", width = 8)
+pdf(file = "./figures/fig_4b_top.pdf", width = 5.5)
 p_smooth
 dev.off()
 
@@ -184,7 +184,7 @@ qopt_long_smooth$arg_max = "Arg max"
 
 p_argmax_smooth = qopt_long_smooth |>
   ggplot(aes(x = yardline_100_group, y = ydstogo_group, fill = fct_relevel(max_decision, "GO"))) +
-  geom_tile(colour = "white", size = 0.1) +
+  geom_tile(colour = "white", linewidth = 0.1) +
   scale_fill_manual(
     name = bquote(a^{"*"}~(sigma~","~hat(q)[tau]^{bar(pi)})),
     values = c("#d53e4f", "gold", "#2C7FB8"),
@@ -193,7 +193,7 @@ p_argmax_smooth = qopt_long_smooth |>
   theme_classic() +
   theme(
     axis.text.x = element_text(
-      angle = 45,
+      angle = 75,
       vjust = 1,
       hjust = 1,
       size = 7
@@ -210,9 +210,9 @@ p_argmax_smooth = qopt_long_smooth |>
   coord_fixed() + 
   guides(fill = guide_legend(keyheight = .5, keywidth = .5)) +
   theme(
-    legend.title = element_text(size=10), #change legend title font size
-    legend.text = element_text(size=8)) #change legend text font size
+    legend.title = element_text(size=11), #change legend title font size
+    legend.text = element_text(size=9)) #change legend text font size
 
-pdf(file = "./figures/fig_4b_bottom.pdf", width = 8)
+pdf(file = "./figures/fig_4b_bottom.pdf", width = 5.5)
 p_argmax_smooth
 dev.off()

@@ -78,7 +78,7 @@ OPP_loss_b <- boot_loss_full |>
   xlab(expression(tau[1])) +
   theme_minimal() 
 
-png(file = "./figures/fig_5_left.png", units="in", width=5, height=5.5, res=300)
+png(file = "./figures/fig_5_left.png", units="in", width=5, height=5.5, res=500)
 egg::ggarrange(OPP_loss_a,
                OPP_loss_b, nrow = 2, heights = c(5,1))
 dev.off()
@@ -125,7 +125,7 @@ OWN_loss_b <- boot_loss_full |>
   xlab(expression(tau[2])) +
   theme_minimal() 
 
-png(file = "./figures/fig_5_right.png", units="in", width=5, height=5.5, res=300)
+png(file = "./figures/fig_5_right.png", units="in", width=5, height=5.5, res=500)
 egg::ggarrange(OWN_loss_a,
                OWN_loss_b, nrow = 2, heights = c(5,1))
 dev.off()
