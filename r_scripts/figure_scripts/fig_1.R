@@ -111,9 +111,13 @@ g.legend_2 = ggpubr::ggarrange(NULL, g.legend, NULL,
                                heights = c(0.2, 0.5, 0.2),
                                ncol = 1, nrow = 3)
 
-ggpubr::ggarrange(observed_decision_map, estimate_wp_policy,
+observed_decision_map
+ggsave("./figures/fig_1a.pdf", width = 5.9, height = 5.85)
+
+ggpubr::ggarrange(estimate_wp_policy,
                   g.legend_2, 
-                  widths = c(0.7,0.7,0.3), nrow = 1)
-ggsave("./figures/fig_1.pdf", width = 15, height = 5.83)
+                  widths = c(1.4,0.5), nrow = 1)
+
+ggsave("./figures/fig_1b.pdf", width = 9.1, height = 5.85)
 
 

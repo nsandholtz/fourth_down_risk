@@ -35,6 +35,6 @@ value_plot = value_func |>
                                    hjust = 1)) 
 value_plot
 
-pdf(file = "./figures/appendix_fig_10.pdf", height = 3, width = 10)
+pdf(file = "./figures/fig_A1.pdf", height = 3, width = 10)
 value_plot
 dev.off()

@@ -136,7 +136,7 @@ observed_decision_map_no_alpha = partition_df |>
                     legend_name = "Most frequent\ndecision") + 
   facet_wrap(~ L, nrow = 2, labeller = label_bquote(rows = L ~ "=" ~ .(L)))  
 
-pdf(file = "./figures/appendix_fig_12a.pdf", width = 5, height = 4.25)
+pdf(file = "./figures/fig_C1a.pdf", width = 5, height = 4.25)
 observed_decision_map_no_alpha
 dev.off()
 
@@ -145,7 +145,7 @@ loss_df <- data.frame(L = factor(c("1","2","3","99")),
                       loss = c(l1, l2, l3, l99))
 
 
-pdf(file = "./figures/appendix_fig_12b.pdf", width = 5, height = 4.25)
+pdf(file = "./figures/fig_C1b.pdf", width = 5, height = 4.25)
 loss_df |> 
   ggplot(aes(x = L, y = loss, group = 1)) +
   geom_line() +

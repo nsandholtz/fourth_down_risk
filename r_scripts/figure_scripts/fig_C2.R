@@ -61,7 +61,7 @@ observed_action_plot <- clean_pbp  |>
            color="black") +
   guides(colour = guide_legend(override.aes = list(size=5)))
 
-png(file = "./figures/appendix_fig_13a.png", units="in", width=7, height=5.5, res=300)
+png(file = "./figures/fig_C2a.png", units="in", width=7, height=5.5, res=300)
 observed_action_plot
 dev.off()
 
@@ -113,7 +113,7 @@ p1 <- loss_long |>
   scale_x_continuous(breaks = seq(0, 1, by = .1)) + 
   xlab(expression(tau)) 
 
-pdf("./figures/appendix_fig_13b.pdf",
+pdf("./figures/fig_C2b.pdf",
     width = 7, height = 5.5)
 p1
 dev.off()

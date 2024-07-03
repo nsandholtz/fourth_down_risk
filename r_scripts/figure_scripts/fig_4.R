@@ -45,16 +45,14 @@ p = qval_long |>
     linewidth=0.1,
   ) +
   scale_fill_gradient2(
-    name = bquote(hat(q)[tau]^{bar(pi)}~(sigma~","~a)),
+    name = bquote(hat(q)[tau]^{bar(pi)}~(sigma~","~a)~" "),
     low = 'blue',
     mid = 'white',
     midpoint = 0,
     high = 'red'
   ) +
   theme_classic() +
-  theme(legend.key.height = unit(.2, 'cm'), #change legend key height
-        legend.key.width = unit(2, 'cm'),
-        legend.position = "top", 
+  theme(
         axis.text.x = element_blank(),
         axis.line.x = element_blank(),
         axis.ticks.x = element_blank(),
@@ -64,15 +62,11 @@ p = qval_long |>
   ylab("Yards to go") + 
   facet_grid(fct_relevel(action, "GO")~tau, labeller = label_bquote(cols = tau ~ "=" ~ .(tau))) +
   coord_fixed() + 
-  guides(fill = guide_colorbar(barheight = .5)) +
+  guides(fill = guide_colorbar(barheight = 7)) +
   theme(
     legend.title = element_text(size=11), 
-    legend.text = element_text(size=9))
-
-pdf(file = "./figures/fig_4a_top.pdf", width = 5.5)
-p
-dev.off()
-
+    legend.text = element_text(size=9),
+    plot.margin = unit(c(0,0.2,-.7,1), 'lines'))
 
 ## Raw Quantile optimal policies ----
 
@@ -102,20 +96,21 @@ p_argmax = qopt_long |>
     ),
     strip.text.x = element_blank()
   ) + 
-  theme(legend.position = "bottom") +
   xlab("Yards to opponent endzone") +
   ylab(" ") + 
   facet_grid(arg_max~tau, labeller = label_bquote(cols = tau ~ "=" ~ .(tau))) +
   coord_fixed() + 
-  guides(fill = guide_legend(keyheight = .5, keywidth = .5)) +
+  guides(fill = guide_legend(keyheight = 1, keywidth = .8)) +
   theme(
-    legend.title = element_text(size=11), #change legend title font size
-    legend.text = element_text(size=9)) #change legend text font size
+    legend.title = element_text(size=11.5), #change legend title font size
+    legend.text = element_text(size=9),
+    plot.margin = unit(c(0,0.2,0,1), 'lines')) #change legend text font size
 
-pdf(file = "./figures/fig_4a_bottom.pdf", width = 5.5)
-p_argmax
-dev.off()
+ggpubr::ggarrange(p,
+                  p_argmax, 
+                  heights = c(3,1.322), nrow = 2)
 
+ggsave("./figures/fig_4a.pdf", width = 7.5, height = 5.1)
 
 ## Smooth Quantile action values ----
 
@@ -145,16 +140,14 @@ p_smooth = qval_long_smooth |>
     linewidth=0.1,
   ) +
   scale_fill_gradient2(
-    name = bquote(hat(q)[tau]^{bar(pi)}~(sigma~","~a)),
+    name = bquote(hat(q)[tau]^{bar(pi)}~(sigma~","~a)~" "),
     low = 'blue',
     mid = 'white',
     midpoint = 0,
     high = 'red',
     limits = qval_long$value |> range(na.rm = T)) +
   theme_classic() +
-  theme(legend.key.height = unit(.2, 'cm'),
-        legend.key.width = unit(2, 'cm'),
-        legend.position = "top", 
+  theme(
         axis.text.x = element_blank(),
         axis.line.x = element_blank(),
         axis.ticks.x = element_blank(),
@@ -164,15 +157,11 @@ p_smooth = qval_long_smooth |>
   ylab("Yards to go") + 
   facet_grid(fct_relevel(action, "GO")~tau, labeller = label_bquote(cols = tau ~ "=" ~ .(tau))) +
   coord_fixed() + 
-  guides(fill = guide_colorbar(barheight = .5)) +
+  guides(fill = guide_colorbar(barheight = 7)) +
   theme(
     legend.title = element_text(size=11), #change legend title font size
-    legend.text = element_text(size=9))
-
-pdf(file = "./figures/fig_4b_top.pdf", width = 5.5)
-p_smooth
-dev.off()
-
+    legend.text = element_text(size=9),
+    plot.margin = unit(c(0,0.2,-.7,1), 'lines'))
 
 ## Smooth Quantile optimal policies ----
 
@@ -203,16 +192,19 @@ p_argmax_smooth = qopt_long_smooth |>
     ),
     strip.text.x = element_blank()
   ) + 
-  theme(legend.position = "bottom") +
+  #theme(legend.position = "bottom") +
   xlab("Yards to opponent endzone") +
   ylab(" ") + 
   facet_grid(arg_max~tau, labeller = label_bquote(cols = tau ~ "=" ~ .(tau))) +
   coord_fixed() + 
-  guides(fill = guide_legend(keyheight = .5, keywidth = .5)) +
+  guides(fill = guide_legend(keyheight = 1, keywidth = .8)) +
   theme(
-    legend.title = element_text(size=11), #change legend title font size
-    legend.text = element_text(size=9)) #change legend text font size
+    legend.title = element_text(size=11.5), #change legend title font size
+    legend.text = element_text(size=9),
+    plot.margin = unit(c(0,0.2,0,1), 'lines')) #change legend text font size
 
-pdf(file = "./figures/fig_4b_bottom.pdf", width = 5.5)
-p_argmax_smooth
-dev.off()
+ggpubr::ggarrange(p_smooth,
+                  p_argmax_smooth, 
+                  heights = c(3,1.322), nrow = 2)
+
+ggsave("./figures/fig_4b.pdf", width = 7.5, height = 5.1)

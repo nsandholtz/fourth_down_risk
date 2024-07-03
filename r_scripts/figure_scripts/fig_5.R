@@ -49,7 +49,9 @@ OPP_loss_a <- boot_loss_full |>
   geom_rug(data = boot_loss_full |>
              select(-OWN) |>
              group_by(boot_ind) |>
-             filter(OPP == min(OPP)), sides = "b", position = "jitter", color = rgb(1,.45,0,.1)) +
+             filter(OPP == min(OPP)), sides = "b", 
+           color = gray(.25, .15), #color = rgb(1,.45,0,.1),
+           position = "jitter") +
   ylab("Loss") +
   theme_minimal() + 
   xlab(expression(tau[1])) +
@@ -67,21 +69,17 @@ OPP_loss_b <- boot_loss_full |>
            alpha = .1,fill = gray(.5,.35)) +
   annotate("rect", xmin = .8, xmax = 1, ymin = 0, ymax = 16,
            alpha = .1,fill = gray(.5,.35)) +
-  geom_density(fill = rgb(1,.65,0,.5),
+  geom_density(fill = "gray", # rgb(1,.65,0,.5),
                bw = "nrd",
                color = NA) + 
   geom_vline(xintercept = OPP_med$tau_med,
-               color = rgb(1,.45,0,1), size = .75, linetype = "dashed") +
+               color = "black", # rgb(1,.45,0,1), 
+             size = .75, linetype = "dashed") +
   scale_x_continuous(breaks = seq(0, 1, by = .1),
                      limits = c(0,1)) + 
   ylab("Density") +
   xlab(expression(tau[1])) +
   theme_minimal() 
-
-png(file = "./figures/fig_5_left.png", units="in", width=5, height=5.5, res=500)
-egg::ggarrange(OPP_loss_a,
-               OPP_loss_b, nrow = 2, heights = c(5,1))
-dev.off()
 
 
 ## OWN Half ----------------------------------------------------------------
@@ -96,7 +94,9 @@ OWN_loss_a <- boot_loss_full |>
   geom_rug(data = boot_loss_full |>
              select(-OPP) |>
              group_by(boot_ind) |>
-             filter(OWN == min(OWN)), sides = "b", position = "jitter", color = rgb(0,0,.5,.1)) +
+             filter(OWN == min(OWN)), sides = "b", 
+           color = gray(.25, .15), # color = rgb(0,0,.5,.1),
+           position = "jitter") +
   ylab("Loss") +
   theme_minimal() + 
   xlab(expression(tau[2])) +
@@ -115,18 +115,23 @@ OWN_loss_b <- boot_loss_full |>
   annotate("rect", xmin = .8, xmax = 1, ymin = 0, ymax = 3,
            alpha = .1,fill = gray(.5,.35)) +
   geom_density(bw = "nrd",
-               fill = rgb(0,0,.5,.5),
+               fill = "gray", # rgb(0,0,.5,.5),
                color = NA) + 
   geom_vline(xintercept = OWN_med$tau_med,
-             color = rgb(0,0,.5,1), linewidth = .75, linetype = "dashed") +
+             color = "black", # rgb(0,0,.5,1), 
+             linewidth = .75, linetype = "dashed") +
   scale_x_continuous(breaks = seq(0, 1, by = .1),
                      limits = c(0,1)) + 
   ylab("Density") +
   xlab(expression(tau[2])) +
   theme_minimal() 
 
-png(file = "./figures/fig_5_right.png", units="in", width=5, height=5.5, res=500)
-egg::ggarrange(OWN_loss_a,
-               OWN_loss_b, nrow = 2, heights = c(5,1))
+
+# Save to file ------------------------------------------------------------
+
+
+png(file = "./figures/fig_5.png", units="in", width=10, height=5.5, res=500)
+egg::ggarrange(OPP_loss_a, OWN_loss_a,
+               OPP_loss_b, OWN_loss_b, nrow = 2, heights = c(5,1))
 dev.off()
 

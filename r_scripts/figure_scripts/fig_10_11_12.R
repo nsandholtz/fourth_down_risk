@@ -130,7 +130,8 @@ for(i in 1:3){
               nudge_x = .025,
               size = 2.5) +
     scale_fill_manual(name = "Field Region",
-                       values = c(rgb(1,.65,0,.5))) +
+                      values = gray(.85) # c(rgb(1,.65,0,.5))
+                      ) +
     scale_x_continuous(limits=c(.2,.826), breaks = seq(.2, .8, by = .1)) +
     ylab("") +
     xlab(expression(tau[1])) +
@@ -186,7 +187,8 @@ for(i in 1:3){
               nudge_x = .025,
               size = 2.5) +
     scale_fill_manual(name = "Field Region",
-                       values = c(rgb(0,0,.5,.5))) +
+                       values = gray(.85) #c(rgb(0,0,.5,.5))
+                      ) +
     scale_x_continuous(limits=c(.2,.826), breaks = seq(.2, .8, by = .1)) +
     ylab("") +
     xlab(expression(tau[2])) +
@@ -197,17 +199,19 @@ for(i in 1:3){
     labs(title = "Own Half", subtitle = glue::glue("Win probability group: {wp_groups[i]}"))
 }
 
-pdf(file = "./figures/fig_8_top.pdf", width = 12, height = 6)
+pdf(file = "./figures/fig_10.pdf", width = 12, height = 12)
+gridExtra::grid.arrange(tau_coach_plot_OPP[[2]], tau_coach_plot_OWN[[2]], nrow = 1)
+dev.off()
+
+pdf(file = "./figures/fig_11.pdf", width = 12, height = 6)
 gridExtra::grid.arrange(tau_coach_plot_OPP[[1]], tau_coach_plot_OWN[[1]], nrow = 1)
 dev.off()
 
-pdf(file = "./figures/fig_8_bottom.pdf", width = 12, height = 8)
+pdf(file = "./figures/fig_12.pdf", width = 12, height = 8)
 gridExtra::grid.arrange(tau_coach_plot_OPP[[3]], tau_coach_plot_OWN[[3]], nrow = 1)
 dev.off()
 
-pdf(file = "./figures/fig_9.pdf", width = 12, height = 12)
-gridExtra::grid.arrange(tau_coach_plot_OPP[[2]], tau_coach_plot_OWN[[2]], nrow = 1)
-dev.off()
+
 
 
 

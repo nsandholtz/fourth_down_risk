@@ -62,7 +62,7 @@ boot_arg_max_plot_appendix <- plot_df |>
   theme(aspect.ratio = 1) +
   theme(legend.position = "none") 
 
-pdf(file = "./figures/appendix_fig_14.pdf", height = 10, width = 7)
+pdf(file = "./figures/fig_C3.pdf", height = 10, width = 7)
 boot_arg_max_plot_appendix
 dev.off()
 

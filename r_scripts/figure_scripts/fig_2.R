@@ -187,7 +187,7 @@ quant_plot = ggplot(data=a1_quant_f, aes(x=quant, y=value)) +
             linewidth = 3, color = "red") + 
   xlab("Quantile") + 
   ylab("Expected points") + 
-  ggtitle("Nex State Expected Points by Quantile"
+  ggtitle("Next State Expected Points by Quantile"
         ) +
   theme_bw() +
   theme(

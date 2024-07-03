@@ -22,7 +22,7 @@ partition_visual <- fourth_states |>
   mutate(part = as.factor(ifelse(part == T,1,2))) |>
   ggplot(aes(x = yardline_100_group, y = ydstogo_group, fill = part)) +
   geom_tile(colour = "white", size = 0.1) +
-  scale_fill_discrete(
+  scale_fill_grey(
     name = " ",
     labels = c(as.expression(bquote(P[1])), as.expression(bquote(P[2])))
   ) +
@@ -36,6 +36,6 @@ partition_visual <- fourth_states |>
                                    hjust = 1)) +
   facet_wrap(~partition, nrow = 1, labeller = label_bquote(cols = rho[.(partition)](x,y)))
 
-pdf(file = "./figures/appendix_fig_11.pdf", height = 3, width = 10)
+pdf(file = "./figures/fig_B1.pdf", height = 3, width = 10)
 partition_visual
 dev.off()

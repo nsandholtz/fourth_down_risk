@@ -376,9 +376,9 @@ get_half_TCM <- function(clean_data,
   
   
   mat3 = cbind(mat1 |> 
-                 select(-touchdown:-kickoff6),
-               mat2 |> select(-play_state)) |> 
-    select(-play_state) |> 
+                 dplyr::select(-touchdown:-kickoff6),
+               mat2 |> dplyr::select(-play_state)) |> 
+    dplyr::select(-play_state) |> 
     as.matrix()
   
   return(mat3)
@@ -535,7 +535,7 @@ get_augmented_third_down_data <- function(data){
           yardline_100,
           sep = "_", remove = F) |>
     mutate(state_index = row_number()) |> 
-    select(-play_state)
+    dplyr::select(-play_state)
   
   
   third_down_penalty = data |> 
@@ -583,7 +583,7 @@ get_augmented_third_down_data <- function(data){
           sep = "_", remove = T) |>
     mutate(next_play_state_hyp = ifelse(is.na(next_state_index), next_play_state_3, next_play_state_hyp)) |>  
     mutate(play_type = ifelse(play_type == "no_play", "pass", play_type)) |> 
-    select(-next_play_state_exact, -play_state_exact, -next_play_state_3, 
+    dplyr::select(-next_play_state_exact, -play_state_exact, -next_play_state_3, 
            -state_index, -next_state_index, -off_team,
            -next_yardline_100_2, -next_ydstogo_2) |> 
     rename(next_play_state_3 = next_play_state_hyp ) 
@@ -608,7 +608,7 @@ get_augmented_third_down_data <- function(data){
     mutate(next_play_state_hyp = ifelse(third_down_converted == 0 & next_play_state_3 == "opp_touchdown", next_play_state_3, next_play_state_hyp )) |> 
     mutate(next_play_state_hyp = ifelse(third_down_converted == 0 & next_play_state_3 == "safety", next_play_state_3, next_play_state_hyp )) |> 
     mutate(next_play_state_3 = ifelse(third_down_converted == 0, next_play_state_hyp, next_play_state_3 )) |> 
-    select(-next_ydstogo_group_hyp, -next_yardline_100_group_hyp, -next_play_state_hyp) |> 
+    dplyr::select(-next_ydstogo_group_hyp, -next_yardline_100_group_hyp, -next_play_state_hyp) |> 
     dplyr::mutate(down = 4) |> 
     unite(play_state, 
           down, 
@@ -617,7 +617,11 @@ get_augmented_third_down_data <- function(data){
           sep = "_", remove = FALSE) |> 
     filter(play_type != "field_goal") 
   
-  augmented_df = bind_rows(data, third_down_df, third_down_penalty)
+  if(nrow(third_down_penalty) == 0){
+    augmented_df = bind_rows(data, third_down_df)
+  } else {
+    augmented_df = bind_rows(data, third_down_df, third_down_penalty)
+  }
   return(augmented_df)
 }
 
@@ -975,7 +979,7 @@ get_observed_policy <- function(dat,
   observed_decision_df = observed_decision_df |> 
     arrange(down, ydstogo_group, yardline_100_group) |> 
     mutate(index2 = row_number()) |>
-    select(play_state, down, ydstogo_group, yardline_100_group, obs_go_n, 
+    dplyr::select(play_state, down, ydstogo_group, yardline_100_group, obs_go_n, 
            obs_fg_n, obs_punt_n, obs_max_n, obs_total_n, observed_decision)
   
   return(observed_decision_df)
@@ -988,8 +992,10 @@ get_bot_policy <- function(dat,
     filter(!is.na(fourth_down_bot))
   #if(!is.null(boot)) {data1 = data1[sample(1:nrow(data1), replace = T),]}
   data1 = data1 |> 
+    mutate(fourth_down_bot = factor(fourth_down_bot, levels = c("go", "fga", "punt"))) |>
     group_by(ydstogo_group, yardline_100_group, fourth_down_bot) |>
     summarise(count_d= n(), .groups = "drop_last") |> 
+    complete(fourth_down_bot = fourth_down_bot) |>
     pivot_wider(id_cols = c(ydstogo_group, yardline_100_group),
                 names_from = fourth_down_bot,
                 values_from = count_d) |>
@@ -1026,7 +1032,7 @@ get_bot_policy <- function(dat,
   observed_decision_df = observed_decision_df |> 
     arrange(down, ydstogo_group, yardline_100_group) |> 
     mutate(index2 = row_number()) |>
-    select(play_state, down, ydstogo_group, yardline_100_group, obs_go_n, 
+    dplyr::select(play_state, down, ydstogo_group, yardline_100_group, obs_go_n, 
            obs_fg_n, obs_punt_n, obs_total_n, observed_decision)
   
   return(observed_decision_df)
@@ -1084,7 +1090,7 @@ get_risk_neut_policy <- function(dat,
            )
     ) |>
     ungroup() |>
-    right_join(fourth_state_df |> select(-max_decision), by = c("ydstogo_group", "yardline_100_group")) |> 
+    right_join(fourth_state_df |> dplyr::select(-max_decision), by = c("ydstogo_group", "yardline_100_group")) |> 
     arrange(ydstogo_group, yardline_100_group) |> 
     rename(observed_decision = max_decision,
            fg_n = `fga`,
@@ -1107,7 +1113,7 @@ get_risk_neut_policy <- function(dat,
   observed_decision_df = observed_decision_df |> 
     arrange(down, ydstogo_group, yardline_100_group) |> 
     mutate(index2 = row_number()) |>
-    select(play_state, down, ydstogo_group, yardline_100_group, obs_go_n, 
+    dplyr::select(play_state, down, ydstogo_group, yardline_100_group, obs_go_n, 
            obs_fg_n, obs_punt_n, obs_total_n, observed_decision)
 }
 
@@ -1152,7 +1158,7 @@ get_tau_hat <- function(pbp_dat,
   }
   
   action_df <- obs_policy |>
-    select(obs_go_n:obs_total_n)
+    dplyr::select(obs_go_n:obs_total_n)
   
   loss_matrix <- matrix(NA, length(tau_vec), 3)
   loss_matrix[,1] <- tau_vec
@@ -1176,14 +1182,14 @@ get_tau_hat <- function(pbp_dat,
   loss_matrix[loss_matrix == 0] <- NA
   min_loss <- list()
   min_loss[[1]] <- as.data.frame(loss_matrix) |>
-    select(-OWN) |>
+    dplyr::select(-OWN) |>
     filter(OPP == min(OPP, na.rm = T)) |>
     rename(min_loss = OPP) |>
     mutate(weight = 1/n(),
            field_region = "OPP")
   
   min_loss[[2]] <- as.data.frame(loss_matrix) |>
-    select(-OPP) |>
+    dplyr::select(-OPP) |>
     filter(OWN == min(OWN, na.rm = T)) |>
     rename(min_loss = OWN) |>
     mutate(weight = 1/n(),
@@ -1219,7 +1225,7 @@ get_loss_curve <- function(pbp_dat,
     mutate(max_index = as.numeric(factor(max_decision, levels = c("go", "fga", "punt"))))
   
   action_df <- obs_policy |>
-    select(obs_go_n:obs_total_n)
+    dplyr::select(obs_go_n:obs_total_n)
   
   loss_matrix <- matrix(NA, length(tau_vec), 3)
   loss_matrix[,1] <- tau_vec
