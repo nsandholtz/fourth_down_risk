@@ -1,8 +1,7 @@
-#setwd("~/fourth_down_risk")
 source("./r_scripts/utils.R")
 source("./r_scripts/constant.R")
 
-dec_limit <- 25
+dec_limit <- 1
 
 # Load data ---------------------------------------
 
@@ -84,7 +83,8 @@ for (k in 1:length(wp_groups)) {
                    qtr %in% c(1, 2, 3),
                    coach_name == coach_list[[k]]$coach_name[i],
                    posteam == coach_list[[k]]$posteam[i],
-                   season == seasons[j]
+                   season == seasons[j],
+                   down == 4
                  ) |>  nrow() == 0) next
         tau_hat_coach_wp_seas[[k]][[i]][[j]] <-
           get_tau_hat(
@@ -94,7 +94,8 @@ for (k in 1:length(wp_groups)) {
                 qtr %in% c(1, 2, 3),
                 coach_name == coach_list[[k]]$coach_name[i],
                 posteam == coach_list[[k]]$posteam[i],
-                season == seasons[j]
+                season == seasons[j],
+                down == 4
               ),
             quant_policy = full_quant_policy |>
               filter(wp_group == wp_groups[k]),
@@ -113,7 +114,8 @@ for (k in 1:length(wp_groups)) {
              qtr %in% c(1, 2, 3),
              coach_name == coach_list[[k]]$coach_name[i],
              posteam == coach_list[[k]]$posteam[i],
-             season == seasons[j]
+             season == seasons[j],
+             down == 4
            ) |>  nrow() == 0) next
         tau_hat_coach_wp_seas[[k]][[i]][[j]] <-
           get_tau_hat(
@@ -122,7 +124,8 @@ for (k in 1:length(wp_groups)) {
                 wp_group == wp_groups[k],
                 coach_name == coach_list[[k]]$coach_name[i],
                 posteam == coach_list[[k]]$posteam[i],
-                season == seasons[j]
+                season == seasons[j],
+                down == 4
               ),
             quant_policy = full_quant_policy |>
               filter(wp_group == wp_groups[k]),
@@ -152,9 +155,9 @@ for (k in 1:length(wp_groups)) {
 tau_hat_coach_wp_seas <- bind_rows(tau_hat_coach_wp_seas)
 
 tau_hat_coach_wp_seas_med <- tau_hat_coach_wp_seas |> 
-  summarize(tau_med = reldist::wtd.quantile(tau, q = .5, weight = weight), 
+  summarize(tau_med = quantile(tau, probs = .5), 
             .by = c(coach_name, posteam, season, field_region, wp_group))
 
-saveRDS(tau_hat_coach_wp_seas, file = "./output/tau_hat_coach_wp_seas.rds")
+#saveRDS(tau_hat_coach_wp_seas, file = "./output/tau_hat_coach_wp_seas.rds")
 saveRDS(tau_hat_coach_wp_seas_med, file = "./output/tau_hat_coach_wp_seas_med.rds")
 
